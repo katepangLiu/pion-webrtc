@@ -4,6 +4,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"time"
 
@@ -87,7 +88,13 @@ func main() {
 
 	// Wait for the offer to be pasted
 	offer := webrtc.SessionDescription{}
-	signal.Decode(signal.MustReadStdin(), &offer)
+	//signal.Decode(signal.MustReadStdin(), &offer)
+	content, ioerr := ioutil.ReadFile("BROWSER_SDP.txt")
+	if ioerr != nil {
+		panic(ioerr)
+	}
+	browserDS := string(content)
+	signal.Decode(browserDS, &offer)
 
 	// Set the remote SessionDescription
 	err = peerConnection.SetRemoteDescription(offer)
