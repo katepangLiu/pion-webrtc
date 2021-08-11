@@ -104,9 +104,16 @@ func main() {
 
 	// Set a handler for when a new remote track starts, this handler copies inbound RTP packets,
 	// replaces the SSRC and sends them back
+	// func(track *webrtc.TrackRemote, receiver *webrtc.RTPReceiver) {} 为 remote track 处理函数
+	// 在接收到 remote track 时刻，开始调用
+	// 当前例子，handler负责把每一个收到的RTP包，修改SSRC为本端，然后回传给remote
+	// 这里运行2个 routine
+	// 主 routine 负责读取 接收到的RTP包， 写入到 local track:  call TrackLocalStaticRTP.WriteRTP
+	// go func    负责定期向 对端 发送 PLI, 请求关键帧
 	peerConnection.OnTrack(func(track *webrtc.TrackRemote, receiver *webrtc.RTPReceiver) {
 		// Send a PLI on an interval so that the publisher is pushing a keyframe every rtcpPLIInterval
 		// This is a temporary fix until we implement incoming RTCP events, then we would push a PLI only when a viewer requests it
+		// 这是临时的方案，在我们实现 incoming RTCP events 之后，只会在需要的时候发送 PLI
 		go func() {
 			ticker := time.NewTicker(time.Second * 3)
 			for range ticker.C {
