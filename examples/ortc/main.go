@@ -98,7 +98,7 @@ func main() {
 	// Exchange the information
 	fmt.Println(signal.Encode(s))
 	remoteSignal := Signal{}
-	signal.Decode(signal.MustReadStdin(), &remoteSignal)
+	signal.Decode(signal.ReadFromFile(), &remoteSignal)
 
 	iceRole := webrtc.ICERoleControlled
 	if *isOffer {

@@ -42,6 +42,16 @@ func MustReadStdin() string {
 	return in
 }
 
+// Read BROWSER_SDP from examples/BROWSER_SDP.txt, copied from browser
+func ReadFromFile() string {
+	content, ioerr := ioutil.ReadFile("../BROWSER_SDP")
+	if ioerr != nil {
+		panic(ioerr)
+	}
+	browserDS := string(content)
+	return browserDS
+}
+
 // Encode encodes the input in base64
 // It can optionally zip the input before encoding
 func Encode(obj interface{}) string {

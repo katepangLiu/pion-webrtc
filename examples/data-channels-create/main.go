@@ -98,7 +98,7 @@ func main() {
 
 	// Wait for the answer to be pasted
 	answer := webrtc.SessionDescription{}
-	signal.Decode(signal.MustReadStdin(), &answer)
+	signal.Decode(signal.ReadFromFile(), &answer)
 
 	// Apply the answer as the remote description
 	err = peerConnection.SetRemoteDescription(answer)
